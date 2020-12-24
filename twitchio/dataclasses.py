@@ -206,8 +206,14 @@ class User:
         badges = self._tags.get('badges', None)
         if badges:
             for chunk in badges.split(','):
-                k, _, v = chunk.partition('/')
-                self._badges[k] = v
+                if not 'predictions' in chunk:
+                    k, _, v = chunk.partition('/')
+                    self._badges[k] = int(v)
+                else:
+                    k, _, v = chunk.partition('/')
+                    if '-' in v:
+                        v = v[5]
+                    self._badges[k] = int(v)
 
         self._mod = int(self._tags.get('mod', 0)) if self._tags else attrs.get('mod', 0)
 
